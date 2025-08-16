@@ -1,1 +1,5 @@
 Shadow Scope
+.venv\Scripts\activate
+
+superuser : admin
+admin
