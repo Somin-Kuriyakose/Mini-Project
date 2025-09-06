@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Profile</title>
+</head>
+<body>
+  <h1>My Profile</h1>
+
+  <p><strong>Name:</strong> {{ profile.user.username }}</p>
+  <p><strong>Age:</strong> {{ profile.age }}</p>
+  <p><strong>Education:</strong> {{ profile.education_level }}</p>
+  <p><strong>IQ Category:</strong> {{ profile.last_iq_category }}</p>
+
+  <p><strong>Interests:</strong>
+    {% for interest in profile.interests.all %}
+      {{ interest.name }}{% if not forloop.last %}, {% endif %}
+    {% empty %} None {% endfor %}
+  </p>
+
+  <p><strong>Skills:</strong>
+    {% for skill in profile.skills.all %}
+      {{ skill.name }}{% if not forloop.last %}, {% endif %}
+    {% empty %} None {% endfor %}
+  </p>
+
+  <p><a href="{% url 'edit_profile' %}">Edit Profile</a></p>
+  <p><a href="{% url 'career_recommendations' %}">View Recommendations</a></p>
+  <p><a href="{% url 'home' %}">Back to Home</a></p>
+</body>
+</html>

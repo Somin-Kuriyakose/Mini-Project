@@ -3,12 +3,20 @@ from django.conf import settings
 from careers.models import Interest
 from assessments.models import IQCategory
 
+class Skill(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
     age = models.PositiveIntegerField(null=True, blank=True)
     education_level = models.CharField(max_length=120, blank=True)
     interests = models.ManyToManyField(Interest, related_name="users", blank=True)
     last_iq_category = models.CharField(max_length=10, choices=IQCategory.choices, blank=True)
+    skills = models.ManyToManyField(Skill, blank=True, related_name="profiles")
+    allow_data_sharing = models.BooleanField(default=True)
 
     def __str__(self):
         return f"Profile({self.user.username})"

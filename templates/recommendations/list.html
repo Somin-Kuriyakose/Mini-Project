@@ -1,0 +1,17 @@
+<h1>Recommended Careers for You</h1>
+
+{% if careers %}
+  <ul>
+  {% for career in careers %}
+    <li>
+      <h3>{{ career.title }}</h3>
+      <p>{{ career.description }}</p>
+      <p><strong>Skills:</strong> {{ career.skills_required }}</p>
+      <p><strong>Education Pathway:</strong> {{ career.education_pathway }}</p>
+      <p><strong>Salary:</strong> {{ career.salary_min }} - {{ career.salary_max }}</p>
+    </li>
+  {% endfor %}
+  </ul>
+{% else %}
+  <p>No career recommendations available. Please check your test results and interests.</p>
+{% endif %}

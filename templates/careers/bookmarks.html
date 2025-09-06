@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Bookmarks</title>
+</head>
+<body>
+  <h2>My Bookmarked Careers</h2>
+
+  <ul>
+    {% for bm in bookmarks %}
+      <li>
+        <h3>{{ bm.career.title }}</h3>
+        <p>{{ bm.career.description }}</p>
+      </li>
+    {% empty %}
+      <p>You have not bookmarked any careers yet.</p>
+    {% endfor %}
+  </ul>
+
+  <p><a href="{% url 'career_recommendations' %}">Back to Recommendations</a></p>
+  <p><a href="{% url 'home' %}">Back to Home</a></p>
+</body>
+</html>

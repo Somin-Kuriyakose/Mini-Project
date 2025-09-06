@@ -1,0 +1,15 @@
+<h1>My Career Goal</h1>
+
+{% if goal %}
+  <h3>{{ goal.target_career.title }}</h3>
+  <p>{{ goal.target_career.description }}</p>
+  <p>Progress: {{ goal.progress }}%</p>
+
+  <form method="post" action="{% url 'update_goal_progress' goal.id %}">
+    {% csrf_token %}
+    <input type="number" name="progress" value="{{ goal.progress }}" min="0" max="100">
+    <button type="submit">Update Progress</button>
+  </form>
+{% else %}
+  <p>No career goal set. Go to recommendations or bookmarks and set one!</p>
+{% endif %}

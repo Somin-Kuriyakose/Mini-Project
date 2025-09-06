@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Career Recommendations</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { color: #333; }
+    .career-card {
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 15px;
+      margin-bottom: 20px;
+      background: #f9f9f9;
+    }
+    .career-card h3 {
+      margin: 0 0 10px 0;
+      color: #0066cc;
+    }
+    .meta { font-size: 14px; color: #555; margin-bottom: 5px; }
+    .actions a { color: #007b00; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Recommended Careers for You</h1>
+
+  <p><strong>IQ Category:</strong> {{ iq_category }}</p>
+
+  <p>
+    <strong>Your Interests:</strong>
+    {% if interests %}
+      {% for interest in interests %}
+        {{ interest.name }}{% if not forloop.last %}, {% endif %}
+      {% endfor %}
+    {% else %}
+      None selected
+    {% endif %}
+  </p>
+
+  <p>
+    <strong>Your Skills:</strong>
+    {% if skills %}
+      {% for skill in skills %}
+        {{ skill.name }}{% if not forloop.last %}, {% endif %}
+      {% endfor %}
+    {% else %}
+      None added
+    {% endif %}
+  </p>
+
+  <hr>
+
+  {% if careers %}
+    {% for career in careers %}
+      <div class="career-card">
+        <h3>{{ career.title }} <small>({{ career.get_category_display }})</small></h3>
+        <p>{{ career.description }}</p>
+        <p class="meta"><strong>Skills Required:</strong> {{ career.skills_required }}</p>
+        <p class="meta"><strong>Education Pathway:</strong> {{ career.education_pathway }}</p>
+        <p class="meta">
+          <strong>Salary:</strong>
+          {% if career.salary_min and career.salary_max %}
+            ₹{{ career.salary_min }} - ₹{{ career.salary_max }}
+          {% else %}
+            Not specified
+          {% endif %}
+        </p>
+        <div class="actions">
+          <a href="{% url 'bookmark_career' career.id %}">🔖 Bookmark</a>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No matching careers found. Try updating your profile with more interests and skills.</p>
+  {% endif %}
+
+  <hr>
+  <p><a href="{% url 'bookmarked_careers' %}">My Bookmarks</a></p>
+  <p><a href="{% url 'home' %}">Back to Home</a></p>
+</body>
+</html>

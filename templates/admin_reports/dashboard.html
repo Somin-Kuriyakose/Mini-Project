@@ -1,0 +1,42 @@
+<h1>Admin Dashboard</h1>
+
+<h2>Tests Per Day (Last 7 Days)</h2>
+<canvas id="testsChart"></canvas>
+
+<h2>Most Popular Careers</h2>
+<ul>
+  {% for c in popular_careers %}
+    <li>{{ c.career__title }} ({{ c.count }})</li>
+  {% endfor %}
+</ul>
+
+<h2>IQ Distribution</h2>
+<canvas id="iqChart"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Tests per day
+  const testsData = {{ tests_per_day|safe }};
+  new Chart(document.getElementById("testsChart"), {
+    type: "line",
+    data: {
+      labels: testsData.map(x => x.created_at__date),
+      datasets: [{
+        label: "Tests Taken",
+        data: testsData.map(x => x.count),
+      }]
+    }
+  });
+
+  // IQ distribution
+  const iqData = {{ iq_distribution|safe }};
+  new Chart(document.getElementById("iqChart"), {
+    type: "pie",
+    data: {
+      labels: iqData.map(x => x.iq_category || "Uncategorized"),
+      datasets: [{
+        data: iqData.map(x => x.count),
+      }]
+    }
+  });
+</script>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Question {{ question_index|add:1 }} of {{ total_questions }}</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    fieldset { margin-bottom: 20px; }
+    .progress { margin-bottom: 15px; font-weight: bold; }
+    button { padding: 8px 16px; }
+  </style>
+</head>
+<body>
+  <h2>Aptitude Test</h2>
+  <p class="progress">Question {{ question_index|add:1 }} of {{ total_questions }}</p>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <fieldset>
+      <legend><strong>{{ question.text }}</strong></legend>
+      {% for choice in choices %}
+        <label>
+          <input type="radio" name="choice" value="{{ choice.id }}" required>
+          {{ choice.text }}
+        </label><br>
+      {% endfor %}
+    </fieldset>
+
+    <button type="submit">
+      {% if question_index|add:1 == total_questions %}
+        Finish Test
+      {% else %}
+        Next
+      {% endif %}
+    </button>
+  </form>
+</body>
+</html>
