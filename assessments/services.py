@@ -1,9 +1,10 @@
 from .models import IQCategory
 
-def categorize_iq(score: int) -> str:
-    """Return IQ category based on score."""
-    if score < 40:
-        return IQCategory.LOW
-    elif score <= 70:
-        return IQCategory.AVERAGE
-    return IQCategory.HIGH
+def categorize_iq(score):
+    if score >= 80:
+        return "High"
+    elif score >= 50:
+        return "Average"
+    else:
+        return "Low"
+

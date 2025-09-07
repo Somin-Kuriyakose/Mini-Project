@@ -6,6 +6,23 @@
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
     h1 { color: #333; }
+    .filters {
+      margin-bottom: 20px;
+    }
+    .filters a {
+      display: inline-block;
+      margin-right: 10px;
+      padding: 6px 12px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 14px;
+      background: #007bff;
+      color: white;
+    }
+    .filters a.active {
+      background: #0056b3;
+      font-weight: bold;
+    }
     .career-card {
       border: 1px solid #ccc;
       border-radius: 6px;
@@ -18,7 +35,14 @@
       color: #0066cc;
     }
     .meta { font-size: 14px; color: #555; margin-bottom: 5px; }
-    .actions a { color: #007b00; font-weight: bold; }
+    .score-box {
+      background: #eef;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+    }
+    .score-box ul { margin: 0; padding-left: 20px; font-size: 14px; }
+    .actions a { color: #007b00; font-weight: bold; text-decoration: none; }
   </style>
 </head>
 <body>
@@ -50,23 +74,96 @@
 
   <hr>
 
+
+
+<!-- Filter Section -->
+<div style="margin-bottom:20px;">
+  <form method="get" style="display:inline;">
+    <input type="hidden" name="sort" value="{{ sort_by|default:'score' }}">
+    
+    <button type="submit" name="filter_interest" value="1"
+      style="background-color: {% if filter_interest %}#007bff{% else %}#eee{% endif %}; 
+             color: {% if filter_interest %}#fff{% else %}#000{% endif %}; 
+             border:none; padding:5px 10px; margin-right:5px; border-radius:4px;">
+      Only With Interest
+    </button>
+
+    <button type="submit" name="filter_skills" value="1"
+      style="background-color: {% if filter_skills %}#007bff{% else %}#eee{% endif %}; 
+             color: {% if filter_skills %}#fff{% else %}#000{% endif %}; 
+             border:none; padding:5px 10px; margin-right:5px; border-radius:4px;">
+      Only With Skills
+    </button>
+
+    <button type="submit" name="show_all" value="1"
+      style="background-color: #6c757d; color:#fff; border:none; padding:5px 10px; margin-right:5px; border-radius:4px;">
+      Show All
+    </button>
+  </form>
+</div>
+
+<!-- Sort Section -->
+<div style="margin-bottom:20px;">
+  <form method="get" style="display:inline;">
+    <input type="hidden" name="filter_interest" value="{{ filter_interest|default:0 }}">
+    <input type="hidden" name="filter_skills" value="{{ filter_skills|default:0 }}">
+
+    <button type="submit" name="sort" value="score"
+      style="background-color: {% if sort_by == 'score' %}#28a745{% else %}#eee{% endif %}; 
+             color: {% if sort_by == 'score' %}#fff{% else %}#000{% endif %}; 
+             border:none; padding:5px 10px; margin-right:5px; border-radius:4px;">
+      Sort by Score
+    </button>
+
+    <button type="submit" name="sort" value="salary"
+      style="background-color: {% if sort_by == 'salary' %}#28a745{% else %}#eee{% endif %}; 
+             color: {% if sort_by == 'salary' %}#fff{% else %}#000{% endif %}; 
+             border:none; padding:5px 10px; margin-right:5px; border-radius:4px;">
+      Sort by Salary
+    </button>
+  </form>
+</div>
+
+
+  <hr>
+
   {% if careers %}
-    {% for career in careers %}
+    {% for item in careers %}
       <div class="career-card">
-        <h3>{{ career.title }} <small>({{ career.get_category_display }})</small></h3>
-        <p>{{ career.description }}</p>
-        <p class="meta"><strong>Skills Required:</strong> {{ career.skills_required }}</p>
-        <p class="meta"><strong>Education Pathway:</strong> {{ career.education_pathway }}</p>
+        <h3>{{ item.career.title }} <small>({{ item.career.get_category_display }})</small></h3>
+        <p>{{ item.career.description }}</p>
+        <p class="meta"><strong>Skills Required:</strong> {{ item.career.skills_required }}</p>
+        <p class="meta"><strong>Education Pathway:</strong> {{ item.career.education_pathway }}</p>
         <p class="meta">
           <strong>Salary:</strong>
-          {% if career.salary_min and career.salary_max %}
-            ₹{{ career.salary_min }} - ₹{{ career.salary_max }}
+          {% if item.career.salary_min and item.career.salary_max %}
+            ₹{{ item.career.salary_min }} - ₹{{ item.career.salary_max }}
           {% else %}
             Not specified
           {% endif %}
         </p>
+
+        <!-- Score Breakdown -->
+        <div class="score-box">
+          <strong>Score Breakdown:</strong>
+          <ul>
+            <li>IQ Match: {{ item.details.iq }}</li>
+            <li>Interest Match: {{ item.details.interests }}
+              {% if item.matched_interests %}
+                (Matched: {{ item.matched_interests|join:", " }})
+              {% endif %}
+            </li>
+            <li>Skills Match: {{ item.details.skills }}
+              {% if item.matched_skills %}
+                (Matched: {{ item.matched_skills|join:", " }})
+              {% endif %}
+            </li>
+          </ul>
+          <p><strong>Total Score:</strong> {{ item.total_score }}</p>
+        </div>
+
         <div class="actions">
-          <a href="{% url 'bookmark_career' career.id %}">🔖 Bookmark</a>
+          <a href="{% url 'bookmark_career' item.career.id %}">🔖 Bookmark</a>
         </div>
       </div>
     {% endfor %}

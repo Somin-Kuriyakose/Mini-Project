@@ -35,16 +35,16 @@ def run():
     for q_text, choices in QUESTIONS:
         question, created = Question.objects.get_or_create(text=q_text, is_active=True)
         if created:
-            print(f"Added Question: {q_text}")
+            print(f"✅ Added Question: {q_text}")
         else:
-            print(f"Question already exists: {q_text}")
+            print(f"⚡ Updating Question: {q_text}")
 
-        # Clear old choices if any
+        # Clear old choices
         question.choices.all().delete()
 
-        # Assign scores: 3,2,1
+        # Assign new scores: 6, 4, 2
         for idx, choice_text in enumerate(choices):
-            score = 3 - idx  # First choice = 3, second = 2, third = 1
+            score = (len(choices) - idx) * 2   # 6, 4, 2
             Choice.objects.create(question=question, text=choice_text, score=score)
             print(f"   -> Added Choice: {choice_text} ({score} pts)")
 
