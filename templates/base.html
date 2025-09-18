@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Shadow Scope{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+   .overlay {
+      position: fixed; /* instead of absolute */
+      top: 0; 
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.7); /* white overlay */
+      z-index: 1;
+    }
+
+    .video-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+    .content-wrapper {
+      position: relative;
+      z-index: 2; /* keep content above overlay */
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <!-- Background Video -->
+  <video class="video-bg" autoplay muted loop playsinline>
+    <source src="{% static 'videos/video.mp4' %}" type="video/mp4">
+    <source src="{% static 'videos/video.ogg' %}" type="video/ogg">
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- White Overlay -->
+  <div class="overlay"></div>
+
+  <!-- Content Wrapper -->
+  <div class="content-wrapper">
+
+    <!-- Header -->
+    <header class="gradient-bg text-black relative">
+  <div class="container mx-auto px-6 py-6 flex justify-between items-center">
+    <h1 class="text-2xl font-bold">Shadow Scope</h1>
+    <nav class="hidden md:flex space-x-6">
+      <a href="{% url 'home' %}" class="hover:text-orange-500">Home</a>
+      <a href="{% url 'take_test' %}" class="hover:text-orange-500">Aptitude Test</a>
+      <a href="{% url 'bookmarked_careers' %}" class="hover:text-orange-500">Bookmarks</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'view_profile' %}" class="hover:text-orange-500">Profile</a>
+        <a href="{% url 'logout' %}" class="hover:text-orange-500">Logout</a>
+      {% else %}
+        <a href="{% url 'login' %}" class="hover:text-orange-500">Login</a>
+        <a href="{% url 'signup' %}" class="hover:text-orange-500">Sign Up</a>
+        
+      {% endif %}
+    </nav>
+  </div>
+</header>
+
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-12">
+      
+      {% block content %}{% endblock %}
+    </main>
+    {% if user.is_authenticated %}
+    <br><br><br>
+    <br>
+     {% else %}
+    <br><br><br>
+    <br><br><br>
+    <br><br><br>
+    <br><br>
+    {% endif %}
+    
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12 relative">
+      <div class="container mx-auto px-6 text-center text-gray-400">
+        <p>&copy; {{ now|date:"Y" }} Shadow Scope. All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+</body>
+</html>

@@ -1,39 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Question {{ question_index|add:1 }} of {{ total_questions }}</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    fieldset { margin-bottom: 20px; }
-    .progress { margin-bottom: 15px; font-weight: bold; }
-    button { padding: 8px 16px; }
-  </style>
-</head>
-<body>
-  <h2>Aptitude Test</h2>
-  <p class="progress">Question {{ question_index|add:1 }} of {{ total_questions }}</p>
+{% extends "base.html" %}
 
-  <form method="post">
-    {% csrf_token %}
+{% block title %}Aptitude Test - Question {{ question_index|add:1 }}{% endblock %}
 
-    <fieldset>
-      <legend><strong>{{ question.text }}</strong></legend>
-      {% for choice in choices %}
-        <label>
-          <input type="radio" name="choice" value="{{ choice.id }}" required>
-          {{ choice.text }}
-        </label><br>
-      {% endfor %}
-    </fieldset>
+{% block content %}
+  <div class="max-w-3xl mx-auto bg-white bg-opacity-80 backdrop-blur-md shadow-lg rounded-xl p-8">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">Aptitude Test</h2>
+    <p class="progress text-gray-600 mb-6 font-medium">
+      Question {{ question_index|add:1 }} of {{ total_questions }}
+    </p>
 
-    <button type="submit">
-      {% if question_index|add:1 == total_questions %}
-        Finish Test
-      {% else %}
-        Next
-      {% endif %}
-    </button>
-  </form>
-</body>
-</html>
+    <form method="post" class="space-y-6">
+      {% csrf_token %}
+
+      <!-- Question -->
+      <fieldset class="border border-gray-300 rounded-lg p-6">
+        <legend class="font-semibold text-gray-900 mb-4">
+          {{ question.text }}
+        </legend>
+
+        <div class="space-y-3">
+          {% for choice in choices %}
+            <label class="flex items-center space-x-3 cursor-pointer">
+              <input 
+                type="radio" 
+                name="choice" 
+                value="{{ choice.id }}" 
+                required 
+                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+              >
+              <span class="text-gray-700">{{ choice.text }}</span>
+            </label>
+          {% endfor %}
+        </div>
+      </fieldset>
+
+      <!-- Next/Finish Button -->
+      <button 
+        type="submit" 
+        class="w-full bg-gray-600 text-white py-3 rounded-lg shadow hover:bg-orange-700 transition"
+      >
+        {% if question_index|add:1 == total_questions %}
+          Finish Test
+        {% else %}
+          Next
+        {% endif %}
+      </button>
+    </form>
+  </div>
+{% endblock %}

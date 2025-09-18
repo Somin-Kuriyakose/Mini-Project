@@ -1,21 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Test Result</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    .result { padding: 20px; border: 1px solid #ccc; background: #f9f9f9; }
-  </style>
-</head>
-<body>
-  <h2>Your Test Result</h2>
+{% extends "base.html" %}
 
-  <div class="result">
-    <p><strong>Total Score:</strong> {{ score }}</p>
-    <p><strong>IQ Category:</strong> {{ iq_category }}</p>
+{% block title %}Test Result{% endblock %}
+
+{% block content %}
+  <div class="max-w-2xl mx-auto bg-white bg-opacity-80 backdrop-blur-md shadow-lg rounded-xl p-8 text-center">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Your Test Result</h2>
+
+    <div class="result space-y-4 text-gray-700">
+      <p><strong>Total Score:</strong> {{ score }}</p>
+      <p><strong>IQ Category:</strong> {{ iq_category }}</p>
+    </div>
+
+    <div class="mt-6">
+      <a href="{% url 'home' %}" 
+         class="inline-block bg-gray-600 hover:bg-orange-700 text-white py-3 px-6 rounded-lg shadow transition">
+        Back to Home
+      </a>
+    </div>
   </div>
 
-  <p><a href="{% url 'home' %}">Back to Home</a></p>
-</body>
-</html>
+  <!-- Prevent going back to the test page -->
+  <script>
+    // When user presses back, block navigation
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+      alert("This action is prohibited. Redirecting you to Home.");
+      window.location.href = "{% url 'home' %}";
+    };
+  </script>
+{% endblock %}
