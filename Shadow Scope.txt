@@ -3,3 +3,5 @@ Shadow Scope
 
 superuser : admin
 admin
+
+python manage.py runserver
